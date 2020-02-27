@@ -1,0 +1,20 @@
+% main script to replicate paper results
+
+% load information about 13 subjects
+subjects = subj_info();
+
+% assign each voxel a stability score
+% stability score is computed as the summation of cross-run correlations
+% results will be stored in subjects/Subject%03d/stableVoxels
+stableVoxels(subjects);
+
+% replicate result 1
+% take most stable 800 voxels out of whole-brain, and apply 3 ranking
+% metrics
+voxSizeList = [800];
+for voxSize_idx = 1:length(voxSizeList)
+    % performs the 3 ranking metrics
+    vectorAnalysisModel(subj_info(), 'whole-brain', 2, voxSizeList(voxSize_idx), 'beta', 'none');
+    % aggregate group-level results and do t-test
+    vectorAnalysis_group(subjects, 'whole-brain', 2, voxSizeList(voxSize_idx), 'beta', 'none');
+end
